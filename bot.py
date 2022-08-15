@@ -17,17 +17,16 @@ gateway = {
 @bot.event
 async def on_ready():
     print(f'Ready! Logged in as {bot.user} (ID: {bot.user.id})')
-    await bot.close()
 
 @bot.command()
 async def blue(ctx):
     """Open a blue portal"""
-    pass
+    gateway["blue"] = ctx.channel
 
 @bot.command()
 async def orange(ctx):
     """Open an orange portal"""
-    pass
+    gateway["orange"] = ctx.channel
 
 bot.run(os.getenv("TOKEN"))
 
