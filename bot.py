@@ -34,5 +34,14 @@ async def orange(ctx):
     print(f"Portal bound: ORANGE -- {repr('#' + ctx.channel.name)} :: {repr(ctx.channel.guild.name)}")
     await ctx.send("An orange portal has been spawned.")
 
+@bot.command()
+async def reset(ctx):
+    """Reset all portals"""
+    gateway["blue"]   = None
+    gateway["orange"] = None
+
+    print("Portals reset")
+    await ctx.send("All portals have been reset.")
+
 bot.run(os.getenv("TOKEN"))
 
