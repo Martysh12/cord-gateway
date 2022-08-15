@@ -21,7 +21,7 @@ async def on_ready():
 @bot.command()
 async def blue(ctx):
     """Open a blue portal"""
-    gateway["blue"] = ctx.channel
+    gateway["blue"] = ctx.channel.id
 
     print(f"Portal bound: BLUE   -- {repr('#' + ctx.channel.name)} :: {repr(ctx.channel.guild.name)}")
     await ctx.send("A blue portal has been spawned.")
@@ -29,7 +29,7 @@ async def blue(ctx):
 @bot.command()
 async def orange(ctx):
     """Open an orange portal"""
-    gateway["orange"] = ctx.channel
+    gateway["orange"] = ctx.channel.id
 
     print(f"Portal bound: ORANGE -- {repr('#' + ctx.channel.name)} :: {repr(ctx.channel.guild.name)}")
     await ctx.send("An orange portal has been spawned.")
