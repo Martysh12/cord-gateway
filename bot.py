@@ -35,13 +35,21 @@ async def message_relayer(message):
             ignore_next_message = False
             return
 
-        if message.channel.id == gateway["blue"]:
-            other_channel = await bot.fetch_channel(gateway["orange"])
-            await other_channel.send(message.content)
+        color = {v: k for k, v in gateway.items()}[message.channel.id]
+        opposite_color = "blue" if color == "orange" else "orange"
 
-        if message.channel.id == gateway["orange"]:
-            other_channel = await bot.fetch_channel(gateway["blue"])
-            await other_channel.send(message.content)
+        try:
+            other_channel = await bot.fetch_channel(gateway[opposite_color])
+        except nextcord.errors.NotFound:
+            gateway[opposite_color] = None
+            await message.channel.send(f"Couldn't access the other channel. (is it deleted?)\n{opposite_color.title()} portal has been reset.")
+            return
+        except nextcord.errors.Forbidden:
+            gateway[opposite_color] = None
+            await message.channel.send(f"Couldn't access the other channel. (does the bot have the required permissions?)\n{opposite_color.title()} portal has been reset.")
+            return
+
+        await other_channel.send(message.content)
 
 @bot.command()
 async def blue(ctx):
