@@ -1,6 +1,6 @@
 import nextcord
 
-from dotenv import load_dotenvi
+from dotenv import load_dotenv
 
 load_dotenv()
 
