@@ -3,6 +3,8 @@ from nextcord.ext import commands
 
 from dotenv import load_dotenv
 
+import os
+
 load_dotenv()
 
 bot = commands.Bot(command_prefix="gate?")
