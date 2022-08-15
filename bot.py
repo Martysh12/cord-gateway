@@ -23,10 +23,16 @@ async def blue(ctx):
     """Open a blue portal"""
     gateway["blue"] = ctx.channel
 
+    print(f"Portal bound: BLUE   -- {repr('#' + ctx.channel.name)} :: {repr(ctx.channel.guild.name)}")
+    await ctx.send("A blue portal has been spawned.")
+
 @bot.command()
 async def orange(ctx):
     """Open an orange portal"""
     gateway["orange"] = ctx.channel
+
+    print(f"Portal bound: ORANGE -- {repr('#' + ctx.channel.name)} :: {repr(ctx.channel.guild.name)}")
+    await ctx.send("An orange portal has been spawned.")
 
 bot.run(os.getenv("TOKEN"))
 
