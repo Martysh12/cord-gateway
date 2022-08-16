@@ -74,6 +74,31 @@ async def orange(ctx):
     await ctx.send("An orange portal has been spawned.")
 
 @bot.command()
+async def status(ctx):
+    """Query portal status"""
+    message = ""
+
+    message += f"Blue: "
+
+    if gateway["blue"] is not None:
+        channel = await bot.fetch_channel(gateway['blue'])
+        message += f"opened (`#{channel.name} :: {channel.guild.name}`)"
+    else:
+        message += "closed"
+
+    message += "\n"
+
+    message += f"Orange: "
+
+    if gateway["orange"] is not None:
+        channel = await bot.fetch_channel(gateway['orange'])
+        message += f"opened (`#{channel.name} :: {channel.guild.name}`)"
+    else:
+        message += "closed"
+
+    await ctx.send(message)
+
+@bot.command()
 async def reset(ctx):
     """Reset all portals"""
     gateway["blue"]   = None
