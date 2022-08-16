@@ -78,39 +78,30 @@ async def orange(ctx):
     print(f"Portal bound: ORANGE -- {repr('#' + ctx.channel.name)} :: {repr(ctx.channel.guild.name)}")
     await ctx.send("An orange portal has been spawned.")
 
+async def status_message_for_portal(ctx, portal):
+    opposite_color = "orange" if portal == "blue" else "blue"
+
+    status = ""
+
+    if gateway[portal] is None:
+        status = "closed"
+    else:
+        channel = await fetch_channel(gateway[portal], lambda s: ctx.send(s + f"\n{portal.title()} portal has been reset."))
+
+        if channel is None:
+            status = "closed"
+        else:
+            status = f"open (`#{channel.name} :: {channel.guild.name}`)"
+
+    return portal.title() + ": " + status
+
 @bot.command()
 async def status(ctx):
     """Query portal status"""
     global ignore_next_message
     ignore_next_message = True
 
-    message = ""
-
-    message += f"Blue: "
-
-    if gateway["blue"] is not None:
-        channel = await fetch_channel(gateway["blue"], lambda s: ctx.send(s + "\nBlue portal has been reset."))
-
-        if channel is None:
-            message += "closed"
-        else:
-            message += f"opened (`#{channel.name} :: {channel.guild.name}`)"
-    else:
-        message += "closed"
-
-    message += "\n"
-
-    message += f"Orange: "
-
-    if gateway["orange"] is not None:
-        channel = await fetch_channel(gateway["orange"], lambda s: ctx.send(s + "\nOrange portal has been reset."))
-
-        if channel is None:
-            message += "closed"
-        else:
-            message += f"opened (`#{channel.name} :: {channel.guild.name}`)"
-    else:
-        message += "closed"
+    message = await status_message_for_portal(ctx, "blue") + "\n" + await status_message_for_portal(ctx, "orange")
 
     await ctx.send(message)
 
