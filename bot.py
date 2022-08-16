@@ -56,27 +56,27 @@ async def message_relayer(message):
 
         await other_channel.send(message.content)
 
+async def create_portal(ctx, color):
+    gateway[color] = ctx.channel.id
+
+    print(f"Portal bound: {color.upper().ljust(6)} -- {repr('#' + ctx.channel.name)} :: {repr(ctx.channel.guild.name)}")
+    await ctx.send(f"{'A' if color == 'blue' else 'An'} {color} portal has been spawned.")
+
 @bot.command()
 async def blue(ctx):
     """Open a blue portal"""
-    gateway["blue"] = ctx.channel.id
-
     global ignore_next_message
     ignore_next_message = True
 
-    print(f"Portal bound: BLUE   -- {repr('#' + ctx.channel.name)} :: {repr(ctx.channel.guild.name)}")
-    await ctx.send("A blue portal has been spawned.")
+    await create_portal(ctx, "blue")
 
 @bot.command()
 async def orange(ctx):
     """Open an orange portal"""
-    gateway["orange"] = ctx.channel.id
-
     global ignore_next_message
     ignore_next_message = True
 
-    print(f"Portal bound: ORANGE -- {repr('#' + ctx.channel.name)} :: {repr(ctx.channel.guild.name)}")
-    await ctx.send("An orange portal has been spawned.")
+    await create_portal(ctx, "orange")
 
 async def status_message_for_portal(ctx, portal):
     opposite_color = "orange" if portal == "blue" else "blue"
