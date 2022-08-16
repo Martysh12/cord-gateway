@@ -16,6 +16,16 @@ gateway = {
 
 ignore_next_message = False
 
+def fetch_channel(channel_id, send_message):
+    try:
+        return await bot.fetch_channel(channel_id)
+    except nextcord.errors.NotFound:
+        await message.channel.send(f"Couldn't access the other channel. (is it deleted?)")
+    except nextcord.errors.Forbidden:
+        await message.channel.send(f"Couldn't access the other channel. (does the bot have the required permissions?)")
+
+    return
+
 @bot.event
 async def on_ready():
     print(f'Ready! Logged in as {bot.user} (ID: {bot.user.id})')
