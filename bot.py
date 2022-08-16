@@ -3,6 +3,8 @@ from nextcord.ext import commands
 
 from dotenv import load_dotenv
 
+import requests
+
 import os
 
 load_dotenv()
@@ -35,7 +37,7 @@ async def message_relayer(message):
     if (gateway["blue"] is None) or (gateway["orange"] is None):
         return
 
-    if message.author == bot.user:
+    if message.author.bot:
         return
 
     if message.channel.id in gateway.values():
@@ -54,29 +56,39 @@ async def message_relayer(message):
             gateway[opposite_color] = None
             return
 
-        await other_channel.send(message.content)
+        # Create a webhook
+
+        avatar_url = message.author.display_avatar.url
+
+        avatar_bytes = requests.get(avatar_url).content
+
+        webhook = await other_channel.create_webhook(name=message.author.name, avatar=avatar_bytes, reason="Automatically created by CordGateway")
+
+        await webhook.send(message.content)
+
+        await webhook.delete(reason="Automatically deleted by CordGateway")
+
+async def create_portal(ctx, color):
+    gateway[color] = ctx.channel.id
+
+    print(f"Portal bound: {color.upper().ljust(6)} -- {repr('#' + ctx.channel.name)} :: {repr(ctx.channel.guild.name)}")
+    await ctx.send(f"{'A' if color == 'blue' else 'An'} {color} portal has been spawned.")
 
 @bot.command()
 async def blue(ctx):
     """Open a blue portal"""
-    gateway["blue"] = ctx.channel.id
-
     global ignore_next_message
     ignore_next_message = True
 
-    print(f"Portal bound: BLUE   -- {repr('#' + ctx.channel.name)} :: {repr(ctx.channel.guild.name)}")
-    await ctx.send("A blue portal has been spawned.")
+    await create_portal(ctx, "blue")
 
 @bot.command()
 async def orange(ctx):
     """Open an orange portal"""
-    gateway["orange"] = ctx.channel.id
-
     global ignore_next_message
     ignore_next_message = True
 
-    print(f"Portal bound: ORANGE -- {repr('#' + ctx.channel.name)} :: {repr(ctx.channel.guild.name)}")
-    await ctx.send("An orange portal has been spawned.")
+    await create_portal(ctx, "orange")
 
 async def status_message_for_portal(ctx, portal):
     opposite_color = "orange" if portal == "blue" else "blue"
