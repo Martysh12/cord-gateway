@@ -3,6 +3,8 @@ from nextcord.ext import commands
 
 from dotenv import load_dotenv
 
+import requests
+
 import os
 
 load_dotenv()
@@ -55,7 +57,12 @@ async def message_relayer(message):
             return
 
         # Create a webhook
-        webhook = await other_channel.create_webhook(name=message.author.name, reason="Automatically created by CordGateway")
+
+        avatar_url = message.author.display_avatar.url
+
+        avatar_bytes = requests.get(avatar_url).content
+
+        webhook = await other_channel.create_webhook(name=message.author.name, avatar=avatar_bytes, reason="Automatically created by CordGateway")
 
         await webhook.send(message.content)
 
