@@ -35,7 +35,7 @@ async def message_relayer(message):
     if (gateway["blue"] is None) or (gateway["orange"] is None):
         return
 
-    if message.author == bot.user:
+    if message.author.bot:
         return
 
     if message.channel.id in gateway.values():
@@ -54,7 +54,12 @@ async def message_relayer(message):
             gateway[opposite_color] = None
             return
 
-        await other_channel.send(message.content)
+        # Create a webhook
+        webhook = await other_channel.create_webhook(name=message.author.name, reason="Automatically created by CordGateway")
+
+        await webhook.send(message.content)
+
+        await webhook.delete(reason="Automatically deleted by CordGateway")
 
 async def create_portal(ctx, color):
     gateway[color] = ctx.channel.id
