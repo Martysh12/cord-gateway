@@ -20,9 +20,9 @@ async def fetch_channel(channel_id, send_message):
     try:
         return await bot.fetch_channel(channel_id)
     except nextcord.errors.NotFound:
-        await message.channel.send(f"Couldn't access the other channel. (is it deleted?)")
+        await send_message(f"Couldn't access the other channel. (is it deleted?)")
     except nextcord.errors.Forbidden:
-        await message.channel.send(f"Couldn't access the other channel. (does the bot have the required permissions?)")
+        await send_message(f"Couldn't access the other channel. (does the bot have the required permissions?)")
 
     return
 
