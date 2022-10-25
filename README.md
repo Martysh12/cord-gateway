@@ -16,7 +16,7 @@ You don't need to open portals in order. As long as both portals are open, the b
 
 Keep in mind that this bot has actual error handling, and it WILL complain if you delete a channel that is bound to a portal.
 
-## will it steal all of my data
+## will it sell my data to meta
 maybe
 
 ## some disclaimers
